@@ -1,28 +1,47 @@
-# TaskSpace - Gerenciador de Tarefas Full-Stack Premium
+# 📌 Task Manager - Aplicação Web Full-Stack
 
-Uma aplicação web completa e responsiva do tipo "Task Manager" (Gerenciador de Tarefas) desenvolvida com uma arquitetura Full-Stack moderna.
-
----
-
-## 🚀 Arquitetura e Tecnologias
-
-- **Front-end:**
-  - **React (Vite):** Estrutura de componentes dinâmica e rápida.
-  - **CSS3 Personalizado (Vanilla CSS):** Estilo premium utilizando Glassmorphism, temas escuros (Dark Mode), micro-animações nas interações e design totalmente responsivo.
-  - **Lucide React:** Coleção de ícones vetoriais modernos.
-
-- **Back-end:**
-  - **Node.js + Express:** API RESTful modularizada com rotas protegidas e tratamento de erros.
-  - **JWT (JSON Web Token):** Autenticação segura por sessão.
-  - **Bcryptjs:** Criptografia e hashing de senhas.
-  - **Morgan & Cors:** Middleware de registro de requisições e políticas de compartilhamento de recursos.
-
-- **Banco de Dados:**
-  - **PostgreSQL:** Banco de dados relacional que gerencia usuários e tarefas com restrições de chaves estrangeiras, deleção em cascata e índices de consulta otimizados.
+Uma aplicação web desenvolvida para auxiliar estudantes e profissionais no gerenciamento eficiente de rotinas, prazos e tarefas diárias. O projeto resolve a falta de organização centralizada por meio de uma interface conectada a um servidor robusto.  
 
 ---
 
-## 🛠️ Instalação e Execução
+## 🎯 Objetivos do Projeto
+
+- **Organização Eficiente:** Permitir o cadastro, listagem, edição e exclusão de tarefas em tempo real (CRUD completo).
+- **Persistência de Dados:** Garantir que todas as informações fiquem salvas com segurança em um banco de dados relacional.
+- **Experiência do Usuário:** Oferecer uma interface responsiva, ágil e de fácil navegação para dispositivos móveis e desktop.
+- **Arquitetura Escalável:** Aplicar o padrão RESTful na comunicação entre a interface (Front-end) e o servidor (Back-end).
+
+---
+
+## 🛠️ Tecnologias Utilizadas (Tech Stack)
+
+### **Front-end**
+- **React.js:** Construção de componentes dinâmicos e reativos. 
+- **HTML5 & CSS3:** Estruturação semântica e estilização moderna com layout responsivo.
+- **JavaScript (ES6+):** Lógica da aplicação, manipulação de estado e consumo de API.
+
+### **Back-end**
+- **Node.js e Express.js:** Criação do servidor e rotas da API RESTful.
+- **SQL (PostgreSQL / MySQL):** Modelagem e estruturação do banco de dados relacional.
+
+### **Ferramentas e Versionamento**
+- **Git e GitHub:** Versionamento de código, controle de *branches* e documentação do repositório. 
+
+---
+
+## 📋 Funcionalidades Principais
+
+1. **Autenticação Segura:** Cadastro de novos usuários e login utilizando senhas criptografadas e JWT.
+2. **Dashboard de Métricas:** Estatísticas em tempo real com barra de progresso do total de tarefas concluídas, pendentes e em andamento.
+3. **CRUD Completo de Tarefas:** Criação, edição, listagem e remoção de tarefas.
+4. **Ciclo de Status Dinâmico:** Altere o status de uma tarefa rapidamente clicando no marcador (Pendente ➔ Em Andamento ➔ Concluída).
+5. **Filtros e Busca Avançada:** Pesquisa textual em tempo real no título/descrição, e filtros rápidos por status e prioridades.
+6. **Ordenação Inteligente:** Ordene suas tarefas por Data de Criação, Título, Data de Vencimento e Prioridade (com suporte para ordem crescente ou decrescente).
+7. **Responsividade:** Interface otimizada tanto para telas de desktop quanto para dispositivos móveis.
+
+---
+
+## 🚀 Instalação e Execução
 
 ### 1. Inicializar o Banco de Dados (PostgreSQL)
 
@@ -66,12 +85,11 @@ Abra o navegador e acesse: `http://localhost:5173/`.
 
 ---
 
-## 📋 Funcionalidades Principais
+## 💡 Aprendizados e Impactos 
 
-1. **Autenticação Segura:** Cadastro de novos usuários e login utilizando senhas criptografadas e JWT.
-2. **Dashboard de Métricas:** Estatísticas em tempo real com barra de progresso do total de tarefas concluídas, pendentes e em andamento.
-3. **CRUD Completo de Tarefas:** Criação, edição, listagem e remoção de tarefas.
-4. **Ciclo de Status Dinâmico:** Altere o status de uma tarefa rapidamente clicando no marcador (Pendente ➔ Em Andamento ➔ Concluída).
-5. **Filtros e Busca Avançada:** Pesquisa textual em tempo real no título/descrição, e filtros rápidos por status e prioridades.
-6. **Ordenação Inteligente:** Ordene suas tarefas por Data de Criação, Título, Data de Vencimento e Prioridade (com suporte para ordem crescente ou decrescente).
-7. **Responsividade:** Interface otimizada tanto para telas de desktop quanto para dispositivos móveis.
+Durante a execução deste projeto acadêmico, foi possível consolidar diversos conhecimentos práticos essenciais de Engenharia de Software:
+
+1. **Integração Cliente-Servidor:** Compreensão do ciclo de requisição e resposta HTTP utilizando métodos REST (GET, POST, PUT, DELETE).
+2. **Modelagem de Dados:** Aplicação de conceitos relacionais em SQL para estruturação e consulta eficiente das informações.
+3. **Gerenciamento de Estado no Front-end:** Uso de *hooks* do React para controle de dados em tempo real e atualização de interfaces. 
+4. **Boas Práticas de Código:** Organização modular de pastas, separação de responsabilidades no código e versionamento consistente com Git.
