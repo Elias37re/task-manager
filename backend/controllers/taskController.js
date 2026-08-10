@@ -1,5 +1,15 @@
 const pool = require('../config/db');
 
+// Helper to sanitize text inputs (strip HTML/script tags)
+const sanitizeInput = (str) => {
+  if (typeof str !== 'string') return '';
+  return str.replace(/<[^>]*>/g, '').trim();
+};
+
+// Valid enums
+const VALID_STATUSES = ['pending', 'in_progress', 'completed'];
+const VALID_PRIORITIES = ['low', 'medium', 'high'];
+
 // @desc    Get all user tasks (with search, filter, and sort options)
 // @route   GET /api/tasks
 // @access  Private
@@ -14,8 +24,9 @@ exports.getTasks = async (req, res) => {
 
     // Apply Search Filter (Title or Description)
     if (search) {
+      const sanitizedSearch = sanitizeInput(search);
       queryText += ` AND (title ILIKE $${paramIndex} OR description ILIKE $${paramIndex})`;
-      queryParams.push(`%${search}%`);
+      queryParams.push(`%${sanitizedSearch}%`);
       paramIndex++;
     }
 
@@ -102,8 +113,28 @@ exports.createTask = async (req, res) => {
   const userId = req.user.id;
   const { title, description, status, priority, due_date } = req.body;
 
-  if (!title) {
+  if (!title || !title.trim()) {
     return res.status(400).json({ message: 'Title is required' });
+  }
+
+  const sanitizedTitle = sanitizeInput(title);
+  const sanitizedDescription = sanitizeInput(description || '');
+
+  // Enum validation
+  if (status && !VALID_STATUSES.includes(status)) {
+    return res.status(400).json({ message: 'Invalid status value. Allowed: pending, in_progress, completed' });
+  }
+
+  if (priority && !VALID_PRIORITIES.includes(priority)) {
+    return res.status(400).json({ message: 'Invalid priority value. Allowed: low, medium, high' });
+  }
+
+  // Date validation
+  if (due_date) {
+    const date = new Date(due_date);
+    if (isNaN(date.getTime())) {
+      return res.status(400).json({ message: 'Invalid due date format' });
+    }
   }
 
   try {
@@ -113,8 +144,8 @@ exports.createTask = async (req, res) => {
        RETURNING *`,
       [
         userId,
-        title,
-        description || '',
+        sanitizedTitle,
+        sanitizedDescription,
         status || 'pending',
         priority || 'medium',
         due_date || null
@@ -136,6 +167,23 @@ exports.updateTask = async (req, res) => {
   const taskId = req.params.id;
   const { title, description, status, priority, due_date } = req.body;
 
+  // Enum validation
+  if (status !== undefined && !VALID_STATUSES.includes(status)) {
+    return res.status(400).json({ message: 'Invalid status value. Allowed: pending, in_progress, completed' });
+  }
+
+  if (priority !== undefined && !VALID_PRIORITIES.includes(priority)) {
+    return res.status(400).json({ message: 'Invalid priority value. Allowed: low, medium, high' });
+  }
+
+  // Date validation
+  if (due_date) {
+    const date = new Date(due_date);
+    if (isNaN(date.getTime())) {
+      return res.status(400).json({ message: 'Invalid due date format' });
+    }
+  }
+
   try {
     // Check if task exists and belongs to user
     const checkResult = await pool.query(
@@ -153,13 +201,16 @@ exports.updateTask = async (req, res) => {
     let paramIndex = 1;
 
     if (title !== undefined) {
+      if (!title.trim()) {
+        return res.status(400).json({ message: 'Title cannot be empty' });
+      }
       queryText += `, title = $${paramIndex}`;
-      queryParams.push(title);
+      queryParams.push(sanitizeInput(title));
       paramIndex++;
     }
     if (description !== undefined) {
       queryText += `, description = $${paramIndex}`;
-      queryParams.push(description);
+      queryParams.push(sanitizeInput(description));
       paramIndex++;
     }
     if (status !== undefined) {

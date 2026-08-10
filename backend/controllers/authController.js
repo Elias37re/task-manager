@@ -3,6 +3,12 @@ const jwt = require('jsonwebtoken');
 const pool = require('../config/db');
 require('dotenv').config();
 
+// Helper to sanitize text inputs (strip HTML/script tags)
+const sanitizeInput = (str) => {
+  if (typeof str !== 'string') return '';
+  return str.replace(/<[^>]*>/g, '').trim();
+};
+
 // Helper to generate JWT
 const generateToken = (userId, username, email) => {
   return jwt.sign(
@@ -23,6 +29,19 @@ exports.register = async (req, res) => {
     return res.status(400).json({ message: 'Please enter all fields' });
   }
 
+  const sanitizedUsername = sanitizeInput(username);
+  const sanitizedEmail = sanitizeInput(email);
+
+  if (!sanitizedUsername || !sanitizedEmail || !password.trim()) {
+    return res.status(400).json({ message: 'Fields cannot be empty or only whitespace' });
+  }
+
+  // Email format validation (Regex)
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(sanitizedEmail)) {
+    return res.status(400).json({ message: 'Please enter a valid email address' });
+  }
+
   if (password.length < 6) {
     return res.status(400).json({ message: 'Password must be at least 6 characters' });
   }
@@ -31,7 +50,7 @@ exports.register = async (req, res) => {
     // Check if user already exists
     const userCheck = await pool.query(
       'SELECT id FROM users WHERE email = $1 OR username = $2',
-      [email.toLowerCase(), username.toLowerCase()]
+      [sanitizedEmail.toLowerCase(), sanitizedUsername.toLowerCase()]
     );
 
     if (userCheck.rows.length > 0) {
@@ -45,7 +64,7 @@ exports.register = async (req, res) => {
     // Insert user
     const newUser = await pool.query(
       'INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3) RETURNING id, username, email, created_at',
-      [username, email.toLowerCase(), passwordHash]
+      [sanitizedUsername, sanitizedEmail.toLowerCase(), passwordHash]
     );
 
     const user = newUser.rows[0];
@@ -77,11 +96,17 @@ exports.login = async (req, res) => {
     return res.status(400).json({ message: 'Please enter all fields' });
   }
 
+  const sanitizedEmail = sanitizeInput(email);
+
+  if (!sanitizedEmail || !password.trim()) {
+    return res.status(400).json({ message: 'Fields cannot be empty or only whitespace' });
+  }
+
   try {
     // Find user by email or username (making it flexible)
     const userResult = await pool.query(
       'SELECT * FROM users WHERE email = $1 OR username = $1',
-      [email.toLowerCase()]
+      [sanitizedEmail.toLowerCase()]
     );
 
     if (userResult.rows.length === 0) {
