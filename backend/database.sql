@@ -22,3 +22,8 @@ CREATE TABLE IF NOT EXISTS tasks (
 
 -- Create index for faster search queries on user's tasks
 CREATE INDEX IF NOT EXISTS idx_tasks_user_id ON tasks(user_id);
+
+-- Seed default test user (password: password123)
+INSERT INTO users (username, email, password_hash)
+VALUES ('testuser', 'testuser@gmail.com', '$2a$10$0TejVysb3Lr3PEfSJngJweoempz9NYQObqn5lk063g5GSgkZn3w2W')
+ON CONFLICT DO NOTHING;

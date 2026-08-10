@@ -83,6 +83,12 @@ npm run dev
 ```
 Abra o navegador e acesse: `http://localhost:5173/`.
 
+### 🔑 Usuário de Teste (Credenciais Padrão)
+
+Caso queira testar a aplicação sem criar uma nova conta, utilize as seguintes credenciais pré-cadastradas:
+- **E-mail:** `testuser@gmail.com`
+- **Senha:** `password123`
+
 ---
 
 ## 💡 Aprendizados e Impactos 
